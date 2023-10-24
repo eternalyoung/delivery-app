@@ -46,5 +46,3 @@ group :development do
   # gem "spring"
 end
 
-
-gem "trailblazer-rails", "~> 2.4"
