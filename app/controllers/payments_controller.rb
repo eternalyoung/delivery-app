@@ -1,7 +1,7 @@
 class PaymentsController < ApplicationController
   def create
     product = Product.find(params[:product_id])
-    payment_result = CloudPayment.proccess(
+    payment_result = CloudPayment.process(
       user_uid: current_user.cloud_payments_uid,
       amount_cents: params[:amount] * 100,
       currency: 'RUB'
