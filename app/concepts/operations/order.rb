@@ -3,6 +3,7 @@ class Order < Trailblazer::Operations
   step :validate_purchase_result
   step :deliver_by_gateway
   step :validate_delivery_result
+  step :create_delivery_record
   failure :error!
   step :notify_user
 
@@ -30,12 +31,18 @@ class Order < Trailblazer::Operations
     options[:delivery_result].successful?
   end
 
+  def create_delivery_record(options, params)
+    Delivery.create(
+      user: params[:user],
+      product: params[:user]
+    )
+  end
+
   def error!(options, params)
-    options["error"] = "Something went wrong with order on product #{params[:product_id]}!"
+    options["error"] = "Something went wrong with user's id#{params[:user].id} order on product id#{params[:product_id]}!"
   end
  
   def notify_user(options, params)
-    OrderMailer.product_access_email(options[:product_access]).deliver_later
     OrderMailer.delivery_email(options[:delivery_result]).deliver_later
   end
 
