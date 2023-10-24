@@ -1,4 +1,4 @@
-class PaymentsController < ApplicationController
+class OrderController < ApplicationController
   def create
     product = Product.find(params[:product_id])
     payment_result = CloudPayment.process(
