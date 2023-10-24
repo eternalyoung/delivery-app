@@ -7,8 +7,8 @@ class Order < Trailblazer::Operations
   failure :error!
   step :notify_user
 
-  def purchase_by_gateway(options, params)
-    options[:payment_result] = payment_gateway.process(
+  def purchase_by_gateway(options)
+    options[:payment_result] = params[:payment_gateway].process(
       user_uid: params[:user].cloud_payments_uid,
       amount_cents: params[:product].amount_cents,
       currency: 'RUB'
@@ -20,7 +20,7 @@ class Order < Trailblazer::Operations
   end
 
   def deliver_by_gateway(options, params)
-    options[:delivery_result] = delivery_gateway.setup_delivery(
+    options[:delivery_result] = params[:delivery_gateway].setup_delivery(
       address: current_user.address,
       person:current_user.name,
       weight: product.weight
@@ -44,13 +44,5 @@ class Order < Trailblazer::Operations
  
   def notify_user(options, params)
     OrderMailer.delivery_email(options[:delivery_result]).deliver_later
-  end
-
-  def payment_gateway
-    CloudPayment
-  end
-
-  def delivery_gateway
-    Sdek
   end
 end

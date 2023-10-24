@@ -3,7 +3,9 @@ class OrderController < ApplicationController
     product = Product.find(params[:product_id])
     order_result = Order.(params: {
       user: current_user,
-      product:
+      product:,
+      payment_gateway: CloudPayment,
+      delivery_gateway: Sdek
     })
 
     if order_result.successful?
