@@ -14,8 +14,6 @@ class PaymentsController < ApplicationController
       )
 
     if payment_result[:status] == 'completed' && delivery_result[:result] = 'succeed'
-      product_access = ProductAccess.create(user: current_user, product:)
-      OrderMailer.product_access_email(product_access).deliver_later
       OrderMailer.delivery_email(delivery_result).deliver_later
       redirect_to :successful_payment_path
     else
