@@ -32,7 +32,7 @@ class Order < Trailblazer::Operations
   end
 
   def create_delivery_record(options, params)
-    Delivery.create(
+    options[:delivery_record] = Delivery.create(
       user: params[:user],
       product: params[:user]
     )
@@ -43,6 +43,6 @@ class Order < Trailblazer::Operations
   end
  
   def notify_user(options, params)
-    OrderMailer.delivery_email(options[:delivery_result]).deliver_later
+    OrderMailer.delivery_email(options[:delivery_record]).deliver_later
   end
 end
