@@ -34,7 +34,7 @@ class Order < Trailblazer::Operations
   def create_delivery_record(options, params)
     options[:delivery_record] = Delivery.create(
       user: params[:user],
-      product: params[:user]
+      product: params[:params]
     )
   end
 
