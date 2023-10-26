@@ -1,15 +1,15 @@
 class Order < Trailblazer::Operations
-  step :purchase_by_gateway
+  step :purchase_via_payment_gateway
   step :validate_purchase_result
-  step :deliver_by_gateway
+  step :delivery_via_delivery_gateway
   step :validate_delivery_result
   step :create_delivery_record
   failure :error!
   step :notify_user
 
-  def purchase_by_gateway(options)
+  def purchase_via_payment_gateway(options, params)
     options[:payment_result] = params[:payment_gateway].process(
-      user_uid: params[:user].cloud_payments_uid,
+      user_uid: params[:user].payment_getaway_uid,
       amount_cents: params[:product].amount_cents,
       currency: 'RUB'
     )
@@ -19,7 +19,7 @@ class Order < Trailblazer::Operations
     options[:payment_result].successful?
   end
 
-  def deliver_by_gateway(options, params)
+  def delivery_via_delivery_gateway(options, params)
     options[:delivery_result] = params[:delivery_gateway].setup_delivery(
       address: current_user.address,
       person:current_user.name,
