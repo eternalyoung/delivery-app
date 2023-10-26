@@ -1,18 +1,17 @@
 class OrderController < ApplicationController
   def create
     product = Product.find(params[:product_id])
-    payment_result = CloudPayment.process(
-      user_uid: current_user.cloud_payments_uid,
-      amount_cents: params[:amount] * 100,
-      currency: 'RUB'
-    )
+    order_result = Order.(params: {
+      user: current_user,
+      product:,
+      payment_gateway: CloudPayment,
+      delivery_gateway: Sdek
+    })
 
-    if payment_result[:status] == 'completed'
-      product_access = ProductAccess.create(user: current_user, product:)
-      OrderMailer.product_access_email(product_access).deliver_later
+    if order_result.successful?
       redirect_to :successful_payment_path
     else
-      redirect_to :failed_payment_path, note: 'Что-то пошло не так'
+      redirect_to :failed_payment_path, note: order_result[:error]
     end
   end
 end
